@@ -10,6 +10,7 @@ function ProductList() {
     const [addedToCart, setAddedToCart] = useState({});
 
     const dispatch = useDispatch();
+    const cart = useSelector(state => state.cart.items);
     const totalItemsQuantity = useSelector(state => state.cart.totalItemsQuantity);
 
     const plantsArray = [
@@ -303,7 +304,13 @@ const handlePlantsClick = (e) => {
                         <div className="product-title">{plant.name}</div>
                         <div className="product-price">{plant.cost}</div>
                         {/*Similarly like the above plant.name show other details like description and cost*/}
-                        <button  className={"product-button"} onClick={() => handleAddToCart(plant)}>Add to Cart</button>
+                        <button  
+                            className={`product-button ${cart.find(item => item.name === plant.name) ? 'added-to-cart' : ''}`} 
+                            onClick={() => handleAddToCart(plant)}
+                            disabled={cart.find(item => item.name === plant.name) ? true : false}
+                        >
+                            Add to Cart
+                        </button>
                     </div>
                     ))}
                 </div>
