@@ -1,9 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const updateTotalQuantity = (items) => {
+
+    let totalQuantity = 0;
+    items.forEach( (item) => {
+        totalQuantity += item.quantity;
+    });
+
+    return totalQuantity;
+}
+
 export const CartSlice = createSlice({
   name: 'cart',
   initialState: {
     items: [], // Initialize items as an empty array
+    totalCartQuantity: 0
   },
   reducers: {
     addItem: (state, action) => {
@@ -14,15 +25,19 @@ export const CartSlice = createSlice({
         } else {
             state.items.push({ name, image, cost, quantity: 1});
         }
+
+        state.totalCartQuantity = updateTotalQuantity(state.items);
     },
     removeItem: (state, action) => {
         state.items = state.items.filter(item => item.name !== action.payload);
+        state.totalCartQuantity = updateTotalQuantity(state.items);
     },
     updateQuantity: (state, action) => {
         const { name, quantity} = action.payload;
         const itemToUpdate = state.items.find(item => item.name === name);
         if(itemToUpdate) {
             itemToUpdate.quantity = quantity;
+            state.totalCartQuantity = updateTotalQuantity(state.items);
         }
     },
   },
